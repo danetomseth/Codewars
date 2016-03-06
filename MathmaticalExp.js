@@ -1,6 +1,7 @@
 function calc(expr) {
 
     var expressionToParse = expr.replace(/\s+/g, '').split('');
+    debugger;
     var check = false;
     var sum;
     function firstNegative() {
@@ -45,10 +46,16 @@ function calc(expr) {
                 } 
 
             } else {
-                console.log('should be negative', get());
-                var negNum = number() * -1;
+                
+                get();
+                if(peek().match(/\d/)) {
+                    console.log('negative number');
+                    debugger;
+                    return -number();
+                }
+                console.log('negative expression')
                 debugger;
-                return negNum;
+                return -expression();
             }
         }
     }
@@ -83,7 +90,7 @@ function calc(expr) {
         return result;
     }
     sum = expression();
-    if(peek() !== undefined) {
+    if(expressionToParse[0] !== undefined) {
       console.log(expressionToParse)
       debugger;
       sum+= expression();
