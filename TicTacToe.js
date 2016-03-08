@@ -3,42 +3,69 @@ function TicTacToe() {
     this.board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     this.gameStatus = false;
     this.currentPlayer;
+    this.firstPlayer;
     this.returnArray = [];
     this.moveCount = 0;
 }
 
 TicTacToe.prototype.move = function(field) {
     // fill out the move method
-    this.moveCount++;
+
+    if(this.moveCount === 0) {
+        if(field) {
+            this.currentPlayer = 2;
+        }
+        else this.currentPlayer = 1;
+    }
+    else {
+        if(this.currentPlayer === 2) {
+            this.currentPlayer = 1;
+            debugger;
+        }
+        else {
+            this.currentPlayer = 2;
+            debugger;
+        }
+    }
+    
     if(this.gameStatus) {
     	this.message(5);
     	this.returnArray[0] = 0;
     	return this.returnArray;
     }
-    if(this.moveCount >=9 ) {
+    else if(this.moveCount >= 9 ) {
     	this.returnArray[0] = 0;
     	this.message(2);
+        this.gameStatus = true;
     	return this.returnArray;
     }
-    if (!field) {
+    //computer play
+    else if (this.currentPlayer === 1) {
     	//no field input, computer plays
-        this.computerChoice();
-        this.currentPlayer = 1;
-    } else {
+        this.moveCount++;
+        this.computerChoice(1);
+    } 
+    else {
     	//user playing
-        this.currentPlayer = 2;
-        if (!this.board[field - 1]) {
+        this.moveCount++;
+        if(!field) {
+            this.moveCount++;
+            this.computerChoice(2);
+        }
+        else if (!this.board[field - 1]) {
         	//check if there is already a move on board
             this.board[field - 1] = 2;
+            
+
         } else {
         	//move already exists
             this.message(6);
             this.returnArray[0] = 0;
-            this.move();
+            return this.returnArray;
         }
+        //this.move();
     }
     this.gameStatus = this.checkMove(this.currentPlayer);
-
     //Game is not finished
     if (this.gameStatus === false) {
         if (this.currentPlayer === 1) {
@@ -69,13 +96,13 @@ TicTacToe.prototype.move = function(field) {
     return this.returnArray;
 }
 
-TicTacToe.prototype.computerChoice = function() {
+TicTacToe.prototype.computerChoice = function(player) {
     var computerOrder = [4, 0, 2, 6, 8, 1, 3, 5, 7];
     for (var i = 0; i < computerOrder.length; i++) {
         if (!this.board[computerOrder[i]]) {
             this.returnArray[0] = computerOrder[i] + 1;
             //set move number to one plus
-            this.board[computerOrder[i]] = 1
+            this.board[computerOrder[i]] = player
             break;
         }
     } 
@@ -89,12 +116,15 @@ TicTacToe.prototype.message = function(code) {
             break;
         case 2:
             this.returnArray[1] = "Draw!";
+            this.gameStatus = true;
             break;
         case 3:
             this.returnArray[1] = "You win!";
+            this.gameStatus = true;
             break;
         case 4:
             this.returnArray[1] = "I win!";
+            this.gameStatus = true;
             break;
         case 5:
             this.returnArray[1] = "Game ended";
